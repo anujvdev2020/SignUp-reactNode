@@ -15,6 +15,7 @@ const SignUpForm = () => {
 
   const handleForm = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErroData({...errorData,[e.target.name]:""})
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
