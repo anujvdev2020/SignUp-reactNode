@@ -6,7 +6,8 @@ const bodyParser = require('body-parser');
 const app = express();
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 const PORT = process.env.PORT || 8000;
@@ -14,10 +15,26 @@ const PORT = process.env.PORT || 8000;
 app.use(cors());
 
 // POST endpoint for handling file uploads
-app.post('/signup',(req, res) => {
+
+const validateRequest = (req, res, next) => {
+  const requiredAttributes = ['firstName', 'email', 'password'];
+  let error={};
+  let errorExist=false
+  for (const attribute of requiredAttributes) {
+    if (!req.body[attribute]) {
+        error[attribute]=`Field is required.`
+        errorExist=true
+    }
+  }
+  if(errorExist){
+    return res.status(401).json({error});
+  }
+
+
+  next();
+};
+app.post('/signup',validateRequest,(req, res) => {
     try {
-        const { username, email, password } = req.body
-        
         // Send the user request body in the response
         res.status(201).json({ message: 'User created successfully', user: req.body });
       } catch (error) {
