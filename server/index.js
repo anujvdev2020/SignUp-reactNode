@@ -3,6 +3,8 @@ const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const fs=require("fs")
+
 const app = express();
 
 // Middleware
@@ -37,9 +39,11 @@ app.post('/signup',validateRequest,(req, res) => {
     try {
         // Send the user request body in the response
         res.status(201).json({ message: 'User created successfully', user: req.body });
+        fs.appendFileSync("./logs.txt",`${new Date()}\n`)
       } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
+        fs.appendFileSync("./logs.txt",`${new Date()}\n`)
       }
 });
 
